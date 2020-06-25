@@ -18,7 +18,7 @@ const Main = ({ background }) => {
     clearError();
     if (currentLocation === '') {
       await axios({
-        url: `http://api.openweathermap.org/data/2.5/weather?q=Białystok&units=metric&appid=${APIKey}`,
+        url: `https://api.openweathermap.org/data/2.5/weather?q=Białystok&units=metric&appid=${APIKey}`,
         method: 'GET',
       })
         .then((res) => {
@@ -35,7 +35,7 @@ const Main = ({ background }) => {
         .catch(callbackError);
     } else {
       await axios({
-        url: `http://api.openweathermap.org/data/2.5/weather?q=${citySearch}&units=metric&appid=${APIKey}`,
+        url: `https://api.openweathermap.org/data/2.5/weather?q=${citySearch}&units=metric&appid=${APIKey}`,
         method: 'GET',
       })
         .then((res) => {
@@ -61,7 +61,7 @@ const Main = ({ background }) => {
         clearError();
         setCurrentLocation('');
         axios({
-          url: `http://api.openweathermap.org/data/2.5/weather?lat=${Math.round(
+          url: `https://api.openweathermap.org/data/2.5/weather?lat=${Math.round(
             position.coords.latitude,
             2
           )}&lon=${Math.round(
