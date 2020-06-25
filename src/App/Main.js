@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import WeatherCard from './WeatherCard';
-const APIKey = '26250b426b197b36ae1fbfc42f8f5e75';
+const APIKey = '';
 
 const Main = ({ background }) => {
   const [currentWeather, setCurrentWeather] = useState({});
