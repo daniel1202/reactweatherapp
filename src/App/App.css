@@ -5,43 +5,40 @@
 }
 body,
 html {
-  height: 100%;
   font-family: 'Poppins', sans-serif;
 }
 .mainDiv {
   background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
   height: 100%;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
 }
 .bg_Image {
   background-image: url('/Images/sun.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
 }
 .searchForm {
   width: 100%;
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  z-index: 5;
-  transform: translate(-50%, -50%);
-  text-align: center;
   display: block;
+  margin: 40px 0;
 }
 .weatherCard {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 5;
-  transform: translate(-50%, -50%);
-  text-align: center;
   color: white;
   border: 2px solid lightskyblue;
   border-radius: 4px;
   width: 30%;
   padding: 20px 0;
   background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 auto;
 }
 label {
   display: block;
@@ -118,7 +115,6 @@ p {
 .info {
   position: absolute;
   bottom: 0;
-  left: 1%;
   font-size: 10px;
   color: white;
 }

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Main from './Main';
 const images = [
@@ -25,7 +24,7 @@ function App() {
     mainDiv[0].style.backgroundImage = `url(${foundImage.image})`;
   };
   return (
-    <div className='App bg_Image'>
+    <div className='container bg_Image'>
       <Main background={toggleBackground} />
       <h5 className='info'>*Czas podany według stefy GMT+2</h5>
     </div>
