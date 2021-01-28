@@ -47,12 +47,12 @@ const WeatherCard = ({
     <div className='weatherCard'>
       <canvas id='icon1' width='128' height='128' />
       <h1>{location}</h1>
-      <h3>Temperatura : {temp}C</h3>
-      <h3>Wilgotność: {humidity} %</h3>
-      <h3>Ciśnienie: {pressure} hPa</h3>
-      <h3>Wiatr: {speed} m/s</h3>
-      <h3>Wschód: {sunrise}</h3>
-      <h3>Zachód: {sunset}</h3>
+      <h3>Temperatura : <b>{temp} C</b></h3>
+      <h3>Wilgotność: <b>{humidity} %</b></h3>
+      <h3>Ciśnienie: <b>{pressure} hPa</b></h3>
+      <h3>Wiatr: <b>{speed} m/s</b></h3>
+      <h3>Wschód: <b>{sunrise}</b></h3>
+      <h3>Zachód: <b>{sunset}</b></h3>
     </div>
   );
 };

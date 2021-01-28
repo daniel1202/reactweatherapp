@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect,useRef } from 'react';
+import {getData,getGeoLocationData} from './Api';
 import WeatherCard from './WeatherCard';
-const APIKey = '26250b426b197b36ae1fbfc42f8f5e75';
 
 const Main = ({ background }) => {
+  const errorText = useRef();
+  const cityInput = useRef();
   const [currentWeather, setCurrentWeather] = useState({});
   const [sunTime, setSunTime] = useState([]);
   const [wind, setWind] = useState({});
   const [id, setId] = useState(0);
   const [currentLocation, setCurrentLocation] = useState('');
-  const [citySearch, setCitySearch] = useState('');
   useEffect(() => {
     getGeoLocation();
   }, []);
@@ -17,70 +17,18 @@ const Main = ({ background }) => {
     if (e !== undefined) e.preventDefault();
     clearError();
     if (currentLocation === '') {
-      await axios({
-        url: `https://api.openweathermap.org/data/2.5/weather?q=Białystok&units=metric&appid=${APIKey}`,
-        method: 'GET',
-      })
-        .then((res) => {
-          setCurrentWeather(res.data.main);
-          setCurrentLocation(res.data.name);
-          setWind(res.data.wind);
-          setSunTime([
-            new Date(res.data.sys.sunrise * 1000).toLocaleTimeString(),
-            new Date(res.data.sys.sunset * 1000).toLocaleTimeString(),
-          ]);
-          background(res.data.weather[0].id);
-          setId(res.data.weather[0].id);
-        })
-        .catch(callbackError);
+      await getData(null).then(callbackSuccess).catch(callbackError);
     } else {
-      await axios({
-        url: `https://api.openweathermap.org/data/2.5/weather?q=${citySearch}&units=metric&appid=${APIKey}`,
-        method: 'GET',
-      })
-        .then((res) => {
-          setCurrentWeather(res.data.main);
-          setCurrentLocation(res.data.name);
-          setWind(res.data.wind);
-          setSunTime([
-            new Date(res.data.sys.sunrise * 1000).toLocaleTimeString(),
-            new Date(res.data.sys.sunset * 1000).toLocaleTimeString(),
-          ]);
-          background(res.data.weather[0].id);
-          setId(res.data.weather[0].id);
-        })
-        .catch(callbackError);
+      await getData(cityInput.current.value).then(callbackSuccess).catch(callbackError);
     }
-  };
-  const updateCurrentCity = (e) => {
-    setCitySearch(e.target.value);
   };
   const getGeoLocation = () => {
     navigator.geolocation.getCurrentPosition(
-      function (position) {
+      async function (position) {
         clearError();
         setCurrentLocation('');
-        axios({
-          url: `https://api.openweathermap.org/data/2.5/weather?lat=${Math.round(
-            position.coords.latitude,
-            2
-          )}&lon=${Math.round(
-            position.coords.longitude,
-            2
-          )}&units=metric&appid=${APIKey}`,
-          method: 'GET',
-        })
-          .then((res) => {
-            setCurrentWeather(res.data.main);
-            setCurrentLocation(res.data.name);
-            setSunTime([
-              new Date(res.data.sys.sunrise * 1000).toLocaleTimeString(),
-              new Date(res.data.sys.sunset * 1000).toLocaleTimeString(),
-            ]);
-            setWind(res.data.wind);
-            background(res.data.weather[0].id);
-            setId(res.data.weather[0].id);
-          })
+        await getGeoLocationData(position.coords.latitude,position.coords.longitude)
+          .then(callbackSuccess)
           .catch(callbackError);
       },
       function (error) {
@@ -89,25 +37,36 @@ const Main = ({ background }) => {
     );
   };
   const clearError = () => {
-    document.getElementById('error').innerText = '';
-    document.querySelector('input').classList.remove('error');
+    errorText.current.innerText = '';
+    cityInput.current.classList.remove('error');
   };
+  const callbackSuccess = (response)=>{
+    setCurrentWeather(response.main);
+    setCurrentLocation(response.name);
+    setWind(response.wind);
+    setSunTime([
+      new Date(response.sys.sunrise * 1000).toLocaleTimeString(),
+      new Date(response.sys.sunset * 1000).toLocaleTimeString(),
+    ]);
+    background(response.weather[0].id);
+    setId(response.weather[0].id);
+  }
   const callbackError = (error) => {
+    console.error(error)
     if (error.response.status / 100 >= 4) {
-      document.getElementById('error').innerText =
+      errorText.current.innerText =
         'Problem ze znalezieniem wybranej lokacji';
-      document.querySelector('input').classList.add('error');
+        cityInput.current.classList.add('error');
     }
   };
   return (
     <div className='mainDiv'>
       <form onSubmit={getWeather} className='searchForm'>
-        <p id='error'></p>
+        <p id='error' ref={errorText}></p>
         <label>
           Wyszukaj miasto{' '}
           <input
-            value={citySearch}
-            onChange={updateCurrentCity}
+            ref={cityInput}
             type='text'
             placeholder='wpisz miasto'
           />
